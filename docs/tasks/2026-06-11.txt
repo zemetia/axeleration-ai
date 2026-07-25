@@ -1,0 +1,4 @@
+1. Add Prisma (Prisma -> Repository -> Service -> Page)  | for using internal un open use direct from service (because in this repo when a page want to get 3rd api data it's get from service too), if the data need open API (for example for public usage, then create app/api/* page for that service) 
+Server Components call Service directly. Create /app/api/* only when data must be fetched from Client Components or exposed through HTTP endpoints.
+2. Add Login System (NextAuth) + JWT Token + Firebase Google Login if wanted / supabase
+3. 

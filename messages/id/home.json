@@ -1,0 +1,44 @@
+{
+  "meta": {
+    "title": "Template Next.js",
+    "description": "Template Next.js 15 yang ketat dan siap produksi"
+  },
+  "hero": {
+    "badge": "Template Siap Produksi",
+    "title": "Bangun cepat.\nRilis dengan percaya diri.",
+    "description": "Template Next.js 15 yang ketat dengan TypeScript, i18n, arsitektur berbasis komponen, Storybook, dan lapisan layanan yang bersih.",
+    "ctaPrimary": "Mulai",
+    "ctaSecondary": "Lihat Kode"
+  },
+  "features": {
+    "heading": "Semua sudah termasuk",
+    "subheading": "Fondasi yang benar-benar ingin Anda bangun",
+    "i18n": {
+      "title": "Internasionalisasi",
+      "description": "i18n type-safe dengan next-intl. Komponen server dan klien didukung. Routing locale sudah ada."
+    },
+    "components": {
+      "title": "Komponen Ketat",
+      "description": "Setiap komponen ada di direktorinya sendiri dengan tipe TypeScript penuh, varian CVA, dan cerita Storybook."
+    },
+    "storybook": {
+      "title": "Storybook 8",
+      "description": "Kembangkan dan dokumentasikan komponen secara terisolasi dengan pengujian a11y dan docs otomatis."
+    },
+    "services": {
+      "title": "Lapisan Layanan",
+      "description": "Klien fetch yang diketik dengan penanganan kesalahan, hints caching, dan interceptors."
+    },
+    "testing": {
+      "title": "Vitest + RTL",
+      "description": "Pengujian komponen dengan Testing Library. Laporan cakupan. Tanpa konfigurasi Jest yang rumit."
+    },
+    "typescript": {
+      "title": "TypeScript Ketat",
+      "description": "noUncheckedIndexedAccess, noImplicitReturns, consistent-type-imports dan lainnya."
+    }
+  },
+  "stack": {
+    "heading": "Tumpukan Teknologi"
+  }
+}

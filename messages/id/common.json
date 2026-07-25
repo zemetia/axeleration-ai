@@ -1,0 +1,17 @@
+{
+  "loading": "Memuat...",
+  "error": "Terjadi kesalahan",
+  "retry": "Coba lagi",
+  "cancel": "Batal",
+  "confirm": "Konfirmasi",
+  "save": "Simpan",
+  "delete": "Hapus",
+  "edit": "Edit",
+  "close": "Tutup",
+  "back": "Kembali",
+  "next": "Selanjutnya",
+  "submit": "Kirim",
+  "search": "Cari",
+  "noResults": "Tidak ada hasil",
+  "language": "Bahasa"
+}

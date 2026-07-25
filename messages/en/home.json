@@ -1,0 +1,44 @@
+{
+  "meta": {
+    "title": "Next.js Template",
+    "description": "A strict, production-ready Next.js 15 template"
+  },
+  "hero": {
+    "badge": "Production-Ready Template",
+    "title": "Build fast.\nShip with confidence.",
+    "description": "A strict Next.js 15 template with TypeScript, i18n, component-based architecture, Storybook, and a clean service layer. Everything you need, nothing you don't.",
+    "ctaPrimary": "Get Started",
+    "ctaSecondary": "View Source"
+  },
+  "features": {
+    "heading": "Everything included",
+    "subheading": "A foundation you'll actually want to build on",
+    "i18n": {
+      "title": "Internationalization",
+      "description": "Type-safe i18n with next-intl. Server and client components both supported. Locale routing included."
+    },
+    "components": {
+      "title": "Strict Components",
+      "description": "Every component lives in its own directory with full TypeScript types, CVA variants, and Storybook stories."
+    },
+    "storybook": {
+      "title": "Storybook 8",
+      "description": "Develop and document components in isolation with a11y testing, interactions, and auto-generated docs."
+    },
+    "services": {
+      "title": "Service Layer",
+      "description": "A typed fetch client with error handling, caching hints, and request/response interceptors."
+    },
+    "testing": {
+      "title": "Vitest + RTL",
+      "description": "Component tests with Testing Library. Coverage reports. No Jest config headaches."
+    },
+    "typescript": {
+      "title": "Strict TypeScript",
+      "description": "noUncheckedIndexedAccess, noImplicitReturns, consistent-type-imports and more. No escape hatches."
+    }
+  },
+  "stack": {
+    "heading": "The Stack"
+  }
+}

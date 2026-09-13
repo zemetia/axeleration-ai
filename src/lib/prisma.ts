@@ -9,7 +9,14 @@ function createPrismaClient(): PrismaClient {
   const adapter = new PrismaPg(pool);
   return new PrismaClient({
     adapter,
-    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+    // `'query'` logging writes every statement to stdout. Console writes to a Windows
+    // terminal are synchronous and block the event loop, so a page issuing a dozen queries
+    // pays for a dozen blocking writes on the request path. Opt in with PRISMA_LOG_QUERIES=1
+    // when actually debugging SQL.
+    log:
+      process.env.NODE_ENV === 'development' && process.env['PRISMA_LOG_QUERIES'] === '1'
+        ? ['query', 'error', 'warn']
+        : ['error'],
   });
 }
 

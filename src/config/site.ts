@@ -56,7 +56,7 @@ export interface SiteConfig {
 
 export const siteConfig: SiteConfig = {
   // ─── Core Identity ───────────────────────────────────────────────────────────
-  name: 'My Product',
+  name: 'Axeleration AI',
   tagline: 'One sentence that nails the value proposition.',
   description:
     'Two-sentence pitch: what the product does, who it is for, and what makes it different from alternatives.',
@@ -73,11 +73,11 @@ export const siteConfig: SiteConfig = {
     targetAudience:
       'Developers and product teams building modern web applications who need …',
     problemSolved:
-      'Most teams waste weeks bootstrapping the same infrastructure decisions — auth, state, i18n, design system — before they can ship any real product value.',
+      'Most teams waste weeks bootstrapping the same infrastructure decisions — auth, state, design system — before they can ship any real product value.',
     solution:
-      'My Product is a production-ready Next.js template with every architectural decision pre-made, documented, and tested, so teams can ship features from day one.',
+      'Axeleration AI is a production-ready Next.js template with every architectural decision pre-made, documented, and tested, so teams can ship features from day one.',
     keyBenefits: [
-      'Zero config — works out of the box with TypeScript, Tailwind v4, and next-intl',
+      'Zero config — works out of the box with TypeScript and Tailwind v4',
       'Opinionated patterns that scale — CVA components, Zustand stores, Zod validation',
       'AI-agent friendly — every pattern is documented in machine-readable blueprint docs',
     ],
@@ -91,29 +91,28 @@ export const siteConfig: SiteConfig = {
 
   // ─── SEO Settings ────────────────────────────────────────────────────────────
   seo: {
-    titleTemplate: '%s | My Product',
-    defaultTitle: 'My Product — One sentence value prop',
+    titleTemplate: '%s | Axeleration AI',
+    defaultTitle: 'Axeleration AI — One sentence value prop',
     twitterHandle: '@handle',
     locale: 'en_US',
   },
 
   // ─── Pages Registry ──────────────────────────────────────────────────────────
   // Add a new entry here every time you create a new public page.
-  // Path is locale-stripped (the sitemap helper adds locale prefixes).
   pages: {
     home: {
       path: '/',
-      title: 'My Product — One sentence value prop',
+      title: 'Axeleration AI — One sentence value prop',
       description:
-        'My Product is a production-ready Next.js 16 template. Ship features from day one with TypeScript, Tailwind v4, next-intl, Zustand, and full SEO / GEO / LLMs.txt support.',
+        'Axeleration AI is a production-ready Next.js 16 template. Ship features from day one with TypeScript, Tailwind v4, Zustand, and full SEO / GEO / LLMs.txt support.',
       changeFreq: 'weekly',
       priority: 1.0,
     },
     about: {
       path: '/about',
-      title: 'About My Product',
+      title: 'About Axeleration AI',
       description:
-        'Learn the story, team, and mission behind My Product — the opinionated Next.js template built for teams who want to skip the boilerplate and focus on shipping.',
+        'Learn the story, team, and mission behind Axeleration AI — the opinionated Next.js template built for teams who want to skip the boilerplate and focus on shipping.',
       changeFreq: 'monthly',
       priority: 0.8,
     },

@@ -1,30 +1,26 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 
-import { Link } from '@/i18n/navigation';
+import { buttonVariants } from '@/components/ui/Button';
 import { cn } from '@/lib/cn';
-import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher';
-import { Button } from '@/components/ui/Button';
 
 export interface HeaderProps {
   className?: string;
 }
 
 export function Header({ className }: HeaderProps) {
-  const t = useTranslations('navigation');
-
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-md',
+        'elevation-sm border-border bg-background/85 sticky top-0 z-50 border-b backdrop-blur-md',
         className,
       )}
     >
       <div className="container-page flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 font-bold tracking-tight text-foreground">
+        <Link href="/" className="text-foreground flex items-center gap-2 font-bold tracking-tight">
           <span
-            className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground text-sm font-black"
+            className="bg-primary text-primary-foreground flex h-7 w-7 items-center justify-center rounded-md text-sm font-black"
             aria-hidden="true"
           >
             N
@@ -35,24 +31,25 @@ export function Header({ className }: HeaderProps) {
         <nav aria-label="Main navigation" className="hidden items-center gap-6 md:flex">
           <Link
             href="/"
-            className="text-sm text-foreground-muted transition-colors hover:text-foreground"
+            className="text-foreground-muted hover:text-foreground text-sm transition-colors"
           >
-            {t('home')}
+            Home
           </Link>
           <Link
             href="/about"
-            className="text-sm text-foreground-muted transition-colors hover:text-foreground"
+            className="text-foreground-muted hover:text-foreground text-sm transition-colors"
           >
-            {t('about')}
+            About
           </Link>
         </nav>
 
         <div className="flex items-center gap-3">
-          <LanguageSwitcher />
-          <Button size="sm" variant="ghost">
-            {t('signIn')}
-          </Button>
-          <Button size="sm">{t('getStarted')}</Button>
+          <Link href="/sign-in" className={buttonVariants({ size: 'sm', variant: 'ghost' })}>
+            Sign In
+          </Link>
+          <Link href="/register" className={buttonVariants({ size: 'sm' })}>
+            Get Started
+          </Link>
         </div>
       </div>
     </header>

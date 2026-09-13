@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
-import { Typography } from '@/components/ui/Typography';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Typography } from '@/components/ui/Typography';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 
@@ -17,7 +17,7 @@ export default function AboutPage() {
         <Typography variant="h1" className="mb-4">
           About This Template
         </Typography>
-        <Typography variant="lead" className="mb-12 text-foreground-muted">
+        <Typography variant="lead" className="text-foreground-muted mb-12">
           A strict, opinionated starting point for production Next.js applications.
         </Typography>
 
@@ -35,7 +35,6 @@ export default function AboutPage() {
     layout/     ← Header, Footer
     shared/     ← Cross-feature components
   hooks/        ← Custom React hooks
-  i18n/         ← Routing + request config
   lib/          ← cn(), utils
   services/     ← API client + services
   stores/       ← Zustand stores

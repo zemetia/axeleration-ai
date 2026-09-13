@@ -1,69 +1,64 @@
-import type { HTMLAttributes } from 'react';
+import { forwardRef, type HTMLAttributes } from 'react';
 
 import { cn } from '@/lib/cn';
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
-  noPadding?: boolean;
+  /** Lifts and outlines on hover — for a whole card that is a single link or button. */
+  isInteractive?: boolean;
 }
 
-export function Card({ noPadding = false, className, children, ...props }: CardProps) {
-  return (
+export const Card = forwardRef<HTMLDivElement, CardProps>(
+  ({ className, isInteractive, ...props }, ref) => (
     <div
+      ref={ref}
       className={cn(
-        'rounded-lg border border-border bg-card text-card-foreground',
-        !noPadding && 'p-6',
+        'elevation-sm border-border bg-card text-card-foreground rounded-2xl border',
+        isInteractive &&
+          'hover:border-border-strong hover:elevation-md transition-[box-shadow,border-color,transform] duration-200 hover:-translate-y-0.5',
         className,
       )}
       {...props}
-    >
-      {children}
-    </div>
-  );
-}
+    />
+  ),
+);
+Card.displayName = 'Card';
 
-export function CardHeader({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div className={cn('flex flex-col space-y-1.5 pb-4', className)} {...props}>
-      {children}
-    </div>
-  );
-}
+export const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn('flex flex-col gap-1.5 p-6', className)} {...props} />
+  ),
+);
+CardHeader.displayName = 'CardHeader';
 
-export function CardTitle({ className, children, ...props }: HTMLAttributes<HTMLHeadingElement>) {
-  return (
+export const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingElement>>(
+  ({ className, ...props }, ref) => (
     <h3
-      className={cn('text-base font-semibold leading-none tracking-tight text-foreground', className)}
+      ref={ref}
+      className={cn('text-base leading-snug font-semibold tracking-tight', className)}
       {...props}
-    >
-      {children}
-    </h3>
-  );
-}
+    />
+  ),
+);
+CardTitle.displayName = 'CardTitle';
 
-export function CardDescription({
-  className,
-  children,
-  ...props
-}: HTMLAttributes<HTMLParagraphElement>) {
-  return (
-    <p className={cn('text-sm text-foreground-muted leading-relaxed', className)} {...props}>
-      {children}
-    </p>
-  );
-}
+export const CardDescription = forwardRef<
+  HTMLParagraphElement,
+  HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => (
+  <p ref={ref} className={cn('text-foreground-muted text-sm', className)} {...props} />
+));
+CardDescription.displayName = 'CardDescription';
 
-export function CardContent({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div className={cn('', className)} {...props}>
-      {children}
-    </div>
-  );
-}
+export const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn('p-6 pt-0', className)} {...props} />
+  ),
+);
+CardContent.displayName = 'CardContent';
 
-export function CardFooter({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div className={cn('flex items-center pt-4', className)} {...props}>
-      {children}
-    </div>
-  );
-}
+export const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn('flex items-center gap-3 p-6 pt-0', className)} {...props} />
+  ),
+);
+CardFooter.displayName = 'CardFooter';

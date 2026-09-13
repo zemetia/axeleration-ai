@@ -8,14 +8,6 @@ export interface PageWrapperProps {
 
 export function PageWrapper({ children, className, narrow = false }: PageWrapperProps) {
   return (
-    <div
-      className={cn(
-        'container-page py-12',
-        narrow && 'max-w-3xl',
-        className,
-      )}
-    >
-      {children}
-    </div>
+    <div className={cn('container-page py-12', narrow && 'max-w-3xl', className)}>{children}</div>
   );
 }

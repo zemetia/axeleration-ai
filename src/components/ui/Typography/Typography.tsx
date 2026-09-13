@@ -46,19 +46,12 @@ const VARIANT_ELEMENT_MAP = {
 type TypographyVariant = keyof typeof VARIANT_ELEMENT_MAP;
 
 export interface TypographyProps
-  extends HTMLAttributes<HTMLElement>,
-    VariantProps<typeof typographyVariants> {
+  extends HTMLAttributes<HTMLElement>, VariantProps<typeof typographyVariants> {
   as?: ElementType;
 }
 
-export function Typography({
-  variant = 'p',
-  as,
-  className,
-  children,
-  ...props
-}: TypographyProps) {
-  const Component = as ?? (VARIANT_ELEMENT_MAP[variant as TypographyVariant] ?? 'p');
+export function Typography({ variant = 'p', as, className, children, ...props }: TypographyProps) {
+  const Component = as ?? VARIANT_ELEMENT_MAP[variant as TypographyVariant] ?? 'p';
 
   return (
     <Component className={cn(typographyVariants({ variant }), className)} {...props}>

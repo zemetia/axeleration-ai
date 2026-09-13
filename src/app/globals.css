@@ -1,86 +1,104 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   /* ─── Typography ─────────────────────────────────────────────── */
   --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, "Cascadia Code", monospace;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, 'Cascadia Code', monospace;
 
   /* ─── Brand / Semantic Colors (oklch for wide-gamut) ─────────── */
 
-  /* Surface */
-  --color-background: oklch(0.073 0.018 264);
-  --color-surface: oklch(0.1 0.018 264);
-  --color-surface-raised: oklch(0.13 0.016 264);
-  --color-surface-overlay: oklch(0.17 0.014 264);
+  /* Surface — light theme. Elevation does not come from a luminance ladder
+     (there's nowhere to go above white): `background` is a faint cool-gray
+     page wash, cards/panels are pure white (`surface`) lifted by
+     `elevation-sm/md/lg` + a hairline border, and `surface-raised` is the one
+     step *down* — a barely-there tint for insets that must read as recessed
+     rather than lifted (table headers, code blocks, hover fills, the empty
+     slot inside a card). `surface-overlay` is white again, for anything that
+     floats over the page. See DESIGN_SYSTEM/01 "Elevation in the light theme". */
+  --color-background: oklch(0.982 0.003 264);
+  --color-surface: oklch(1 0 0);
+  --color-surface-raised: oklch(0.972 0.004 264);
+  --color-surface-overlay: oklch(1 0 0);
 
-  /* Text */
-  --color-foreground: oklch(0.962 0.006 264);
-  --color-foreground-muted: oklch(0.62 0.018 264);
-  --color-foreground-subtle: oklch(0.42 0.014 264);
+  /* Text — contrast measured against --color-background (white) */
+  --color-foreground: oklch(0.19 0.012 264); /* 15.8:1 */
+  --color-foreground-muted: oklch(0.46 0.014 264); /* 6.6:1 */
+  --color-foreground-subtle: oklch(0.58 0.013 264); /* 4.5:1 — AA floor for placeholder/meta text */
 
-  /* Border */
-  --color-border: oklch(0.22 0.016 264);
-  --color-border-strong: oklch(0.32 0.018 264);
-  --color-input: oklch(0.22 0.016 264);
+  /* Border — hairlines, deliberately quiet: on an airy white page the border
+     is a hint of separation, the whitespace does the grouping. */
+  --color-border: oklch(0.925 0.005 264);
+  --color-border-strong: oklch(0.855 0.007 264);
+  --color-input: oklch(0.9 0.006 264);
 
-  /* Primary — electric blue */
-  --color-primary: oklch(0.623 0.214 259.8);
-  --color-primary-hover: oklch(0.56 0.214 259.8);
-  --color-primary-active: oklch(0.5 0.2 259.8);
+  /* Primary — electric blue, tuned for a white page instead of a dark one.
+     0.55 keeps the solid-fill button label (white on primary) at 4.6:1, and
+     `text-primary-text` needs to be darker than the fill (not lighter, like
+     the old dark theme) to clear 4.5:1 as text on white. Verified 2026-07-29. */
+  --color-primary: oklch(0.55 0.21 259.8);
+  --color-primary-hover: oklch(0.49 0.21 259.8);
+  --color-primary-active: oklch(0.44 0.19 259.8);
   --color-primary-foreground: oklch(0.98 0.004 260);
-  --color-primary-subtle: oklch(0.623 0.214 259.8 / 0.12);
-  --color-primary-glow: oklch(0.623 0.214 259.8 / 0.35);
+  --color-primary-subtle: oklch(0.55 0.21 259.8 / 0.08);
+  --color-primary-glow: oklch(0.55 0.21 259.8 / 0.25);
+  /* Darker blue for primary-colored TEXT (links) on a white page — the solid
+     fill is too light to pass as text at 3.9:1. 6.1:1 on background. */
+  --color-primary-text: oklch(0.47 0.19 259.8);
 
-  /* Destructive */
+  /* Destructive.
+     `destructive` is the SOLID fill (white label on it). `destructive-text` is
+     the darker variant for error copy on white — the fill itself only reaches
+     ~3.9:1 as text, so rendering messages with it fails AA. */
   --color-destructive: oklch(0.577 0.245 27.3);
   --color-destructive-hover: oklch(0.52 0.24 27.3);
   --color-destructive-foreground: oklch(0.98 0.004 27.3);
-  --color-destructive-subtle: oklch(0.577 0.245 27.3 / 0.12);
+  --color-destructive-subtle: oklch(0.577 0.245 27.3 / 0.08);
+  --color-destructive-text: oklch(0.48 0.2 27.3); /* 6.0:1 on --color-background */
 
   /* Success */
-  --color-success: oklch(0.664 0.179 158.3);
-  --color-success-hover: oklch(0.6 0.17 158.3);
+  --color-success: oklch(0.52 0.15 158.3);
+  --color-success-hover: oklch(0.46 0.15 158.3);
   --color-success-foreground: oklch(0.98 0.004 158.3);
-  --color-success-subtle: oklch(0.664 0.179 158.3 / 0.12);
+  --color-success-subtle: oklch(0.664 0.179 158.3 / 0.1);
 
-  /* Warning */
-  --color-warning: oklch(0.769 0.188 70.1);
-  --color-warning-hover: oklch(0.7 0.18 70.1);
-  --color-warning-foreground: oklch(0.12 0.01 70.1);
+  /* Warning.
+     `warning` is the solid fill / dot (dark label on it). `warning-text` is the darker variant
+     for warning copy on white — the fill measures ~2.1:1 as text and fails AA outright. */
+  --color-warning: oklch(0.75 0.17 70.1);
+  --color-warning-hover: oklch(0.68 0.17 70.1);
+  --color-warning-foreground: oklch(0.15 0.02 70.1);
   --color-warning-subtle: oklch(0.769 0.188 70.1 / 0.12);
+  --color-warning-text: oklch(0.49 0.11 70.1); /* 5.6:1 on --color-background */
 
   /* Card */
-  --color-card: oklch(0.1 0.018 264);
-  --color-card-foreground: oklch(0.962 0.006 264);
+  --color-card: oklch(1 0 0); /* keep in step with --color-surface */
+  --color-card-foreground: oklch(0.19 0.012 264);
 
   /* Focus ring */
-  --color-ring: oklch(0.623 0.214 259.8);
+  --color-ring: oklch(0.55 0.21 259.8); /* = --color-primary */
 
-  /* ─── shadcn/ui semantic aliases ────────────────────────────────
-     These mirror the tokens above so shadcn-generated components
-     (popover, secondary, muted, accent, sidebar) work without
-     any extra configuration.                                       */
-
-  --color-popover: oklch(0.1 0.018 264);
-  --color-popover-foreground: oklch(0.962 0.006 264);
-
-  --color-secondary: oklch(0.13 0.016 264);
-  --color-secondary-foreground: oklch(0.962 0.006 264);
-
-  --color-muted: oklch(0.13 0.016 264);
-  --color-muted-foreground: oklch(0.62 0.018 264);
-
-  --color-accent: oklch(0.623 0.214 259.8 / 0.12);
-  --color-accent-foreground: oklch(0.962 0.006 264);
-
-  --color-sidebar: oklch(0.1 0.018 264);
-  --color-sidebar-foreground: oklch(0.962 0.006 264);
-  --color-sidebar-primary: oklch(0.623 0.214 259.8);
-  --color-sidebar-primary-foreground: oklch(0.98 0.004 260);
-  --color-sidebar-accent: oklch(0.13 0.016 264);
-  --color-sidebar-accent-foreground: oklch(0.962 0.006 264);
-  --color-sidebar-border: oklch(0.22 0.016 264);
-  --color-sidebar-ring: oklch(0.623 0.214 259.8);
+  /* ─── Asset type accents ──────────────────────────────────────
+     One hue per AssetType so the library reads at a glance (a character
+     card is never mistaken for a map card). All sit at L 0.48 so each one
+     clears 4.5:1 as text on the white page; the `-subtle` pair is the same
+     hue at 10% alpha for chips and image placeholders. Keyed by the enum
+     value — see `ASSET_TYPE_ACCENTS` in the asset library route.        */
+  --color-asset-character: oklch(0.48 0.18 300);
+  --color-asset-character-subtle: oklch(0.48 0.18 300 / 0.1);
+  --color-asset-person: oklch(0.48 0.13 200);
+  --color-asset-person-subtle: oklch(0.48 0.13 200 / 0.1);
+  --color-asset-style: oklch(0.48 0.19 330);
+  --color-asset-style-subtle: oklch(0.48 0.19 330 / 0.1);
+  --color-asset-location: oklch(0.48 0.14 150);
+  --color-asset-location-subtle: oklch(0.48 0.14 150 / 0.1);
+  --color-asset-ambience: oklch(0.48 0.13 70);
+  --color-asset-ambience-subtle: oklch(0.48 0.13 70 / 0.1);
+  --color-asset-map: oklch(0.48 0.15 40);
+  --color-asset-map-subtle: oklch(0.48 0.15 40 / 0.1);
+  --color-asset-prop: oklch(0.48 0.11 110);
+  --color-asset-prop-subtle: oklch(0.48 0.11 110 / 0.1);
+  --color-asset-voice: oklch(0.48 0.16 250);
+  --color-asset-voice-subtle: oklch(0.48 0.16 250 / 0.1);
 
   /* ─── Radius ──────────────────────────────────────────────────── */
   --radius-xs: 0.25rem;
@@ -101,7 +119,7 @@
   }
 
   html {
-    color-scheme: dark;
+    color-scheme: light;
     scroll-behavior: smooth;
   }
 
@@ -133,6 +151,33 @@
     padding-inline: 1.5rem;
   }
 
+  /* The studio's own measure. Wider than the marketing pages because the work
+     surfaces are grids and tables, and generous side padding is what keeps a
+     dense screen from feeling cramped. */
+  .container-studio {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .container-studio {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* Eyebrow — the small uppercase label above a section heading or beside a
+     stat. One utility so every one of them has the same tracking. */
+  .text-eyebrow {
+    font-size: 0.6875rem;
+    line-height: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-foreground-subtle);
+  }
+
   .text-balance {
     text-wrap: balance;
   }
@@ -148,11 +193,113 @@
     border: 1px solid transparent;
     background:
       linear-gradient(var(--color-card), var(--color-card)) padding-box,
-      linear-gradient(
-          135deg,
-          var(--color-primary),
-          oklch(0.716 0.143 202.8)
-        )
-        border-box;
+      linear-gradient(135deg, var(--color-primary), oklch(0.716 0.143 202.8)) border-box;
+  }
+
+  /* Elevation on a white surface — background is already the lightest step,
+     so raised elements differentiate with shadow + hairline border instead
+     of a luminance ladder. Use the step matching the surface token in play:
+     surface → sm, surface-raised → md, surface-overlay → lg. */
+  .elevation-sm {
+    box-shadow:
+      0 1px 2px -1px oklch(0.19 0.012 264 / 0.06),
+      0 1px 3px 0 oklch(0.19 0.012 264 / 0.04);
+  }
+
+  .elevation-md {
+    box-shadow:
+      0 2px 4px -2px oklch(0.19 0.012 264 / 0.06),
+      0 6px 16px -4px oklch(0.19 0.012 264 / 0.08);
+  }
+
+  .elevation-lg {
+    box-shadow:
+      0 4px 8px -4px oklch(0.19 0.012 264 / 0.06),
+      0 24px 48px -12px oklch(0.19 0.012 264 / 0.14);
+  }
+
+  /* Bento grid — soft gradient blobs behind a page section, cards float
+     above them. Blobs are absolutely positioned by the caller; these only
+     supply the radial fill. Two hues so overlapping sections don't read
+     as one flat wash — primary (blue) + the teal used by `.border-gradient`. */
+  .bento-blob-primary {
+    background: radial-gradient(circle, var(--color-primary-glow) 0%, transparent 70%);
+  }
+
+  .bento-blob-teal {
+    background: radial-gradient(circle, oklch(0.716 0.143 202.8 / 0.3) 0%, transparent 70%);
+  }
+
+  /* Slide-over panel entrance (asset library detail/editor). Kept here rather
+     than pulling in an animation plugin for two keyframes. */
+  .animate-slide-in-right {
+    animation: slide-in-right 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .animate-fade-in {
+    animation: fade-in 150ms ease-out;
+  }
+
+  /* Confirmation dialogs — a short rise, not a bounce. Anything that spends
+     money should feel deliberate. */
+  .animate-dialog-in {
+    animation: dialog-in 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* A row/card that just arrived (a new episode, a finished scene). */
+  .animate-rise-in {
+    animation: rise-in 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Long-running work: a stripe travelling across an indeterminate bar. */
+  .animate-shimmer {
+    background-size: 200% 100%;
+    animation: shimmer 1.6s linear infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-slide-in-right,
+  .animate-fade-in,
+  .animate-dialog-in,
+  .animate-rise-in,
+  .animate-shimmer {
+    animation: none;
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(1.5rem);
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-in {
+  from {
+    transform: translate(-50%, calc(-50% + 0.5rem)) scale(0.98);
+    opacity: 0;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    transform: translateY(0.375rem);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
   }
 }

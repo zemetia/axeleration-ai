@@ -1,131 +1,93 @@
+import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { Loader2 } from 'lucide-react';
 import { forwardRef, type ButtonHTMLAttributes } from 'react';
 
 import { cn } from '@/lib/cn';
 
-const buttonVariants = cva(
+export const buttonVariants = cva(
   [
-    'inline-flex items-center justify-center gap-2',
-    'rounded-md font-medium leading-none tracking-tight',
-    'transition-all duration-150',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-    'disabled:pointer-events-none disabled:opacity-40',
-    'select-none whitespace-nowrap',
+    'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium',
+    'transition-[background-color,border-color,color,box-shadow,transform] duration-150',
+    'active:scale-[0.985]',
+    'focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/25',
+    'disabled:pointer-events-none disabled:opacity-45',
+    '[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   ],
   {
     variants: {
       variant: {
-        primary: [
-          'bg-primary text-primary-foreground',
-          'hover:bg-primary-hover active:bg-primary-active',
-          'shadow-sm shadow-primary/20',
-        ],
+        primary: ['elevation-sm bg-primary text-primary-foreground', 'hover:bg-primary-hover'],
         secondary: [
           'bg-surface-raised text-foreground border border-border',
-          'hover:bg-surface-overlay hover:border-border-strong',
+          'hover:border-border-strong hover:bg-background',
         ],
         outline: [
-          'border border-border bg-transparent text-foreground',
-          'hover:bg-surface hover:border-border-strong',
+          'elevation-sm border border-border bg-surface text-foreground',
+          'hover:border-border-strong hover:bg-surface-raised',
         ],
         ghost: [
           'bg-transparent text-foreground-muted',
-          'hover:bg-surface hover:text-foreground',
+          'hover:bg-surface-raised hover:text-foreground',
         ],
         destructive: [
-          'bg-destructive text-destructive-foreground',
+          'elevation-sm bg-destructive text-destructive-foreground',
           'hover:bg-destructive-hover',
-          'shadow-sm shadow-destructive/20',
+          'focus-visible:ring-destructive/25',
         ],
-        link: ['bg-transparent text-primary underline-offset-4 hover:underline'],
+        'destructive-outline': [
+          'border border-destructive/30 bg-surface text-destructive-text',
+          'hover:bg-destructive-subtle',
+          'focus-visible:ring-destructive/25',
+        ],
+        link: ['text-primary-text underline-offset-4 hover:underline'],
       },
       size: {
-        xs: 'h-7 px-2.5 text-xs',
-        sm: 'h-8 px-3 text-sm',
-        md: 'h-9 px-4 text-sm',
-        lg: 'h-10 px-6 text-base',
-        xl: 'h-12 px-8 text-base',
-        icon: 'h-9 w-9',
+        xs: 'h-7 gap-1.5 px-2.5 text-xs [&_svg]:size-3.5',
+        sm: 'h-8 px-3 text-xs',
+        md: 'h-10 px-4',
+        lg: 'h-11 px-6 text-base',
+        icon: 'h-10 w-10',
         'icon-sm': 'h-8 w-8',
-        'icon-lg': 'h-10 w-10',
       },
       fullWidth: {
         true: 'w-full',
       },
     },
-    defaultVariants: {
-      variant: 'primary',
-      size: 'md',
-    },
+    defaultVariants: { variant: 'primary', size: 'md' },
   },
 );
 
 export type ButtonVariants = VariantProps<typeof buttonVariants>;
 
-export interface ButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
-    ButtonVariants {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>, ButtonVariants {
+  asChild?: boolean;
   isLoading?: boolean;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
-}
-
-function Spinner() {
-  return (
-    <svg
-      className="h-4 w-4 animate-spin"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-    >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      />
-      <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-      />
-    </svg>
-  );
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    {
-      variant,
-      size,
-      fullWidth,
-      isLoading = false,
-      leftIcon,
-      rightIcon,
-      className,
-      children,
-      disabled,
-      ...props
-    },
+    { variant, size, fullWidth, asChild, isLoading, className, disabled, children, ...props },
     ref,
   ) => {
+    const Comp = asChild ? Slot : 'button';
     return (
-      <button
+      <Comp
         ref={ref}
-        disabled={disabled ?? isLoading}
-        aria-busy={isLoading || undefined}
         className={cn(buttonVariants({ variant, size, fullWidth }), className)}
+        disabled={disabled ?? isLoading}
         {...props}
       >
-        {isLoading ? <Spinner /> : leftIcon}
-        {children}
-        {!isLoading && rightIcon}
-      </button>
+        {asChild ? (
+          children
+        ) : (
+          <>
+            {isLoading && <Loader2 className="animate-spin" aria-hidden="true" />}
+            {children}
+          </>
+        )}
+      </Comp>
     );
   },
 );
-
 Button.displayName = 'Button';

@@ -6,7 +6,7 @@
 
 ## Overview
 
-`src/middleware.ts` is the Next.js server-side intercept layer that runs **before** any route is rendered. It sits at the network boundary in front of the app — handling rate limiting, security headers, and i18n locale routing.
+`src/middleware.ts` is the Next.js server-side intercept layer that runs **before** any route is rendered. It sits at the network boundary in front of the app — handling rate limiting and security headers.
 
 **Runtime:** Node.js (stable). Exports a named `middleware` function.
 
@@ -34,11 +34,8 @@ src/middleware.ts  (Node.js — runs before route rendering)
     │       → continue to Route Handler
     │
     └── page routes
-            intlMiddleware(request)   ← createMiddleware(routing) from next-intl
-                reads Accept-Language, sets locale cookie,
-                redirects /path → /id/path (non-default locale)
-            applySecurityHeaders(intlResponse)
-            → continue to src/app/[locale]/layout.tsx
+            applySecurityHeaders(NextResponse.next())
+            → continue to src/app/layout.tsx
 ```
 
 ---
@@ -136,7 +133,7 @@ Static assets (`_next/static`, `_next/image`, `favicon.ico`, images) are exclude
 
 1. Create `src/proxy/<concern>.ts`
 2. Export a pure function: `apply<Concern>(request: NextRequest): Promise<NextResponse | null>` (async early-exit) or `apply<Concern>(response: NextResponse): NextResponse` (sync response mutation)
-3. Call it in `src/middleware.ts` — before `intlMiddleware` if it may short-circuit (return early), after if it only mutates headers
+3. Call it in `src/middleware.ts` — before other checks if it may short-circuit (return early), after if it only mutates headers
 
 ```ts
 // src/middleware.ts — example adding auth guard
@@ -149,11 +146,7 @@ export async function middleware(request: NextRequest) {
   const authBlocked = await applyAuthGuard(request);  // ← new early-exit handler
   if (authBlocked) return authBlocked;
 
-  if (request.nextUrl.pathname.startsWith('/api')) {
-    return applySecurityHeaders(NextResponse.next());
-  }
-
-  return applySecurityHeaders(intlMiddleware(request));
+  return applySecurityHeaders(NextResponse.next());
 }
 ```
 

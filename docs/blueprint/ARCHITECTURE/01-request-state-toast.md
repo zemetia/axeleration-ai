@@ -1,4 +1,4 @@
-# Architecture — 01: Request, Providers, i18n, State, Toast
+# Architecture — 01: Request, Providers, State, Toast
 
 ← [ARCHITECTURE.md](../ARCHITECTURE.md) | [Blueprint INDEX](../INDEX.md) | [02 — ApiClient, Sentry, PostHog →](./02-apiclient-sentry-posthog.md) | [04 — Proxy →](./04-proxy.md)
 
@@ -10,31 +10,27 @@
 Browser Request
     │
     ▼
-proxy.ts  (Next.js 16 — replaces middleware.ts)
+src/middleware.ts
     ├── applyRateLimit     → 429 if /api/* exceeds 60 req/min per IP
     ├── /api/* routes      → applySecurityHeaders → Route Handler
-    └── page routes        → intlMiddleware (next-intl) → applySecurityHeaders
-            next-intl: reads Accept-Language, sets locale cookie,
-                       redirects /path → /id/path
+    └── page routes        → applySecurityHeaders
     │
     ▼
-src/app/[locale]/layout.tsx  ← RSC
-    ├── validates locale param
+src/app/layout.tsx  ← RSC
     ├── loads Outfit + JetBrains Mono via next/font
-    ├── calls getTranslations() for generateMetadata
-    ├── calls getRequestConfig() → loads messages JSON
+    ├── static `metadata` export (English copy)
     └── renders provider tree:
-        <html lang={locale}>
-          <NextIntlClientProvider messages={messages}>
+        <html lang="en">
+          <QueryProvider>
             <PostHogProvider>
               {children}         ← pages (RSC by default)
             </PostHogProvider>
             <Toaster />          ← Sonner portal, ONE instance only
-          </NextIntlClientProvider>
+          </QueryProvider>
         </html>
     │
     ▼
-src/app/[locale]/page.tsx  ← Server Component
+src/app/page.tsx  ← Server Component
     └── no 'use client', no hooks, no event handlers
 ```
 
@@ -44,39 +40,13 @@ src/app/[locale]/page.tsx  ← Server Component
 
 | Provider | File | Purpose |
 |---|---|---|
-| `NextIntlClientProvider` | next-intl (external) | i18n messages to client tree |
+| `QueryProvider` | [src/providers/](../../../src/providers/) | TanStack Query client for server data |
 | `PostHogProvider` | [src/providers/PostHogProvider.tsx](../../../src/providers/PostHogProvider.tsx) | posthog-js init + pageview tracking |
 | `<Suspense>` | inside PostHogProvider | Required: `useSearchParams` triggers Suspense |
 | `PostHogPageView` | [src/providers/PostHogProvider.tsx](../../../src/providers/PostHogProvider.tsx) | captures `$pageview` on route change |
-| `<Toaster />` | [src/components/ui/Sonner/Sonner.tsx](../../../src/components/ui/Sonner/Sonner.tsx) | Sonner portal outside PostHog, inside intl |
+| `<Toaster />` | [src/components/ui/Sonner/Sonner.tsx](../../../src/components/ui/Sonner/Sonner.tsx) | Sonner portal outside PostHog |
 
 `<Toaster />` placement: outside `PostHogProvider` — toasts are global, need no analytics context.
-
----
-
-## i18n (next-intl v4)
-
-```
-src/i18n/routing.ts
-    defineRouting({
-      locales: ['en', 'id'],
-      defaultLocale: 'en',
-      localePrefix: 'as-needed'   // /about (en), /id/about (id)
-    })
-        │
-        ├── proxy.ts
-        │       createMiddleware(routing) + rate limit + security headers
-        │       matcher: excludes _next/*, static assets (includes /api)
-        │
-        ├── src/i18n/request.ts
-        │       getRequestConfig() → loads messages per locale per RSC render
-        │
-        └── src/i18n/navigation.ts
-                createNavigation(routing)
-                exports: Link, redirect, usePathname, useRouter, getPathname
-```
-
-**Critical:** Import navigation ONLY from `src/i18n/navigation.ts`. `next/navigation` has no locale context.
 
 ---
 
@@ -110,7 +80,7 @@ src/components/ui/Sonner/Sonner.tsx
     <Toaster>  props: theme="dark", richColors, position="bottom-right"
     toastOptions.classNames: design-system tokens with ! suffix for Tailwind v4 important
         │
-        mounted in src/app/[locale]/layout.tsx — ONE mount
+        mounted in src/app/layout.tsx — ONE mount
 
 src/hooks/useToast.ts
     useToast() → { toast, success, error, warning, info, loading, promise, dismiss, custom }

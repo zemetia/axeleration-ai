@@ -84,34 +84,19 @@ describe('Button', () => {
 
 ---
 
-## shadcn/ui
+## No component CLI
 
-Config: [components.json](../../../components.json)
+**No CLI, no `components.json`, no generated files, no UI package.** The primitives in `src/components/ui/` are ordinary source files in this repo — copy the shape of an existing one (see [01](./01-structure-cva.md)) rather than running a generator. Radix packages are plain dependencies; add `@radix-ui/react-<thing>` when a primitive genuinely needs its behaviour (focus trap, roving tabindex, portal), not for anything a `<div>` already does.
 
-```json
-{
-  "style": "new-york",
-  "rsc": true,
-  "tsx": true,
-  "tailwind": { "css": "src/app/globals.css", "cssVariables": true },
-  "aliases": {
-    "utils": "@/lib/cn",
-    "ui": "@/components/ui",
-    "components": "@/components",
-    "lib": "@/lib",
-    "hooks": "@/hooks"
-  },
-  "iconLibrary": "lucide"
-}
-```
+Styling comes from the `--color-*` tokens only — see [DESIGN_SYSTEM/01 — One namespace only](../DESIGN_SYSTEM/01-tokens-colors.md#one-namespace-only), especially the list of dead `var(--field-*)` names that fail silently if copied from an old file.
 
-Add component: `npx shadcn@latest add <name>`
+### Testing the field wrappers
 
-Generated file location: `src/components/ui/<name>.tsx` (flat — NOT a subdirectory).
+Three gotchas worth copying when you add a field component:
 
-shadcn color tokens resolve to the design system via aliases in `src/app/globals.css`. See [DESIGN_SYSTEM.md](../DESIGN_SYSTEM.md).
-
-Do not rename or move generated shadcn files — CLI regenerates in-place on update.
+1. **Assert the callback shape.** `TextInputField` / `TextAreaField` / `NumberInputField` / `SelectField` are **value-based**, so tests assert `toHaveBeenLastCalledWith('luna')` — not an event object. This is the single easiest thing to regress when porting a call site from a native input.
+2. **A controlled component needs a controlled test.** If the component owns nothing and the test renders it with a fixed `value` prop, every keystroke is re-rendered back to that fixed value — `userEvent.type(el, 'luna')` then reports `'a'`, and a multi-step interaction (`TagsInput` committing three tags) only ever sees the last one. Wrap it in a tiny `useState` harness so the value feeds back, the way every real caller does.
+3. **Read a controlled `<select>`'s value inside the handler.** `SelectField` is a native select, so `onChange` gets a real DOM event — but React resets the controlled `value` before any assertion outside the callback runs. Push `e.target.value` into an array from within the mock instead of reading `mock.calls[0][0].target.value` afterwards.
 
 ---
 

@@ -81,7 +81,7 @@ pages: {
 | Bad | Good |
 |---|---|
 | "About page for My Product" | "Learn how My Product cuts Next.js setup from weeks to hours — our story, team, and open-source commitments." |
-| "Home" | "My Product is a production-ready Next.js 16 template. Ship features from day one with TypeScript, Tailwind v4, next-intl, and full SEO / GEO support." |
+| "Home" | "My Product is a production-ready Next.js 16 template. Ship features from day one with TypeScript, Tailwind v4, and full SEO / GEO support." |
 
 Rules:
 - Include the primary keyword in the first 11 words

@@ -1,34 +1,18 @@
-# Design System — 02: shadcn Aliases, Typography, Radius, Utilities
+# Design System — 02: Typography, Radius, Utilities
 
 ← [01 — Color tokens](./01-tokens-colors.md) | [DESIGN_SYSTEM.md](../DESIGN_SYSTEM.md) | [Blueprint INDEX](../INDEX.md)
 
 ---
 
-## shadcn/ui Alias Tokens
+## Component Library Tokens
 
-Defined in `src/app/globals.css` `@theme {}`. Allow shadcn-generated components to work without extra config.
-
-| shadcn class | Maps to | CSS variable value |
-|---|---|---|
-| `bg-popover` | `bg-surface` | `oklch(0.1 0.018 264)` |
-| `text-popover-foreground` | `text-foreground` | `oklch(0.962 0.006 264)` |
-| `bg-secondary` | `bg-surface-raised` | `oklch(0.13 0.016 264)` |
-| `text-secondary-foreground` | `text-foreground` | `oklch(0.962 0.006 264)` |
-| `bg-muted` | `bg-surface-raised` | `oklch(0.13 0.016 264)` |
-| `text-muted-foreground` | `text-foreground-muted` | `oklch(0.62 0.018 264)` |
-| `bg-accent` | `bg-primary-subtle` | `oklch(0.623 0.214 259.8 / 0.12)` |
-| `text-accent-foreground` | `text-foreground` | `oklch(0.962 0.006 264)` |
-| `bg-sidebar` | `bg-surface` | `oklch(0.1 0.018 264)` |
-| `bg-sidebar-primary` | `bg-primary` | `oklch(0.623 0.214 259.8)` |
-| `bg-sidebar-accent` | `bg-surface-raised` | `oklch(0.13 0.016 264)` |
-| `border-sidebar-border` | `border-border` | `oklch(0.22 0.016 264)` |
-| `ring-sidebar-ring` | `ring-ring` | `oklch(0.623 0.214 259.8)` |
+There is no alias layer. The hand-rolled primitives in `src/components/ui/` are written against the `--color-*` tokens directly, so a brand color change is one edit in `@theme {}`. See [01 — One namespace only](./01-tokens-colors.md#one-namespace-only).
 
 ---
 
 ## Typography
 
-Fonts loaded via `next/font/google` in `src/app/[locale]/layout.tsx`, injected as CSS vars:
+Fonts loaded via `next/font/google` in `src/app/layout.tsx`, injected as CSS vars:
 
 | CSS variable | Font family | Weights | Utility |
 |---|---|---|---|

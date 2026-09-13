@@ -32,7 +32,7 @@ Exports schema builders and a `serializeSchema()` serializer. Render schemas as 
 Inline the `<script>` tag in your Server Component. This is the standard Next.js App Router pattern — no extra wrapper component needed:
 
 ```tsx
-// src/app/[locale]/about/page.tsx
+// src/app/about/page.tsx
 import { serializeSchema, webPageSchema, breadcrumbSchema } from '@/lib/structured-data';
 import { siteConfig } from '@/config/site';
 
@@ -74,7 +74,7 @@ export default function AboutPage() {
 ### Organization schema — root layout (once per site)
 
 ```tsx
-// src/app/[locale]/layout.tsx
+// src/app/layout.tsx
 import { serializeSchema, organizationSchema } from '@/lib/structured-data';
 
 // Inside the layout JSX:
@@ -123,7 +123,7 @@ AI overviews pull the most direct answer. Lead with the answer, then explain.
 
 ```
 ❌ "In this guide, we will explore what a Next.js template is and why you might want one."
-✅ "A Next.js template is a pre-configured codebase with decisions about TypeScript, state, i18n, and design already made — so teams start with features instead of boilerplate."
+✅ "A Next.js template is a pre-configured codebase with decisions about TypeScript, state, and design already made — so teams start with features instead of boilerplate."
 ```
 
 ### 2. Use specific numbers and facts

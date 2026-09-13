@@ -182,7 +182,7 @@ export function UserMenu() {
 }
 ```
 
-Wrap client subtree that needs `useSession` with `<SessionProvider>` from `next-auth/react`. Mount it in `src/app/[locale]/layout.tsx` inside the provider tree.
+Wrap client subtree that needs `useSession` with `<SessionProvider>` from `next-auth/react`. Mount it in `src/app/layout.tsx` inside the provider tree.
 
 ### Sign-in / Sign-out (Server Actions)
 
@@ -243,14 +243,14 @@ const valid = await bcrypt.compare(plainPassword, hashedPassword);
 
 ## Sign-in Page
 
-`src/auth.ts` sets `pages.signIn = '/sign-in'`. With `localePrefix: 'always'` routing, the actual path is `/en/sign-in` / `/id/sign-in`. Update this to your localized route after scaffolding the sign-in page.
+`src/auth.ts` sets `pages.signIn = '/sign-in'`, matching [src/app/sign-in/page.tsx](../../src/app/sign-in/page.tsx).
 
 ---
 
 ## File Creation Checklist — New Auth Feature
 
 - [ ] Add Zod schema to [`src/lib/validations/auth.ts`](../../src/lib/validations/auth.ts)
-- [ ] Create Server Action in `src/app/[locale]/<feature>/actions.ts` — call `prisma` directly, never in components
+- [ ] Create Server Action in `src/app/<feature>/actions.ts` — call `prisma` directly, never in components
 - [ ] Use `requireAuth()` or `requireRole()` from `@/lib/auth` at the top of protected Server Actions / Route Handlers
 - [ ] For new OAuth providers: add to `providers[]` in [`src/auth.ts`](../../src/auth.ts) + env vars
 

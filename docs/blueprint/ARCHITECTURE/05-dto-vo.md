@@ -11,7 +11,7 @@
 | **DTO** | `src/types/dtos/` | Raw API contract — matches server JSON field-for-field |
 | **Service** | `src/services/` | Fetches DTO, validates, transforms to VO |
 | **VO** | `src/types/value-objects/` | Client-ready shape — formatted, derived, camelCase |
-| **Page / Component** | `src/app/[locale]/` | Consumes VO only — never sees raw DTO |
+| **Page / Component** | `src/app/` | Consumes VO only — never sees raw DTO |
 
 ---
 
@@ -33,7 +33,7 @@ VO  src/types/value-objects/<domain>.vo.ts
     │  camelCase, display-ready strings, derived booleans, no nullables
     │
     ▼
-Page / Component  src/app/[locale]/...
+Page / Component  src/app/...
     reads VO fields directly — no formatting or null-coalescing in JSX
 ```
 

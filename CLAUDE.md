@@ -29,18 +29,16 @@
 | Design tokens + Tailwind v4 | [docs/blueprint/DESIGN_SYSTEM.md](docs/blueprint/DESIGN_SYSTEM.md) |
 | Services + API client + Zod | [docs/blueprint/SERVICES.md](docs/blueprint/SERVICES.md) |
 | Zustand state + persistence | [docs/blueprint/STATE.md](docs/blueprint/STATE.md) |
-| i18n + routing + translations | [docs/blueprint/I18N.md](docs/blueprint/I18N.md) |
 | TypeScript + ESLint + anti-patterns | [docs/blueprint/BEST_PRACTICE.md](docs/blueprint/BEST_PRACTICE.md) |
 | **SEO + GEO + LLMs.txt** | [docs/blueprint/SEO_GEO_LLM.md](docs/blueprint/SEO_GEO_LLM.md) |
 | **Knowledge system rules** | [docs/blueprint/KNOWLEDGE.md](docs/blueprint/KNOWLEDGE.md) |
 
 ## Stack snapshot
 
-Next.js 16 · TypeScript 6 (strict) · Tailwind v4 · next-intl v4 · TanStack Query v5 · Zustand v5 · Zod v4 · Sonner · Sentry · PostHog · Vitest
+Next.js 16 · TypeScript 6 (strict) · Tailwind v4 · shadcn-style primitives (Radix + CVA, `src/components/ui/`) · TanStack Query v5 · Zustand v5 · Zod v4 · Sonner · Sentry · PostHog · Vitest
 
 ## Non-negotiables
 
-- Navigation: always `@/i18n/navigation`, never `next/navigation`
 - Server data: TanStack Query only — no `useState` for API responses
 - Colors: design tokens only — no raw hex / oklch / Tailwind color utilities
 - `npm run lint` must exit 0 (`--max-warnings 0`)

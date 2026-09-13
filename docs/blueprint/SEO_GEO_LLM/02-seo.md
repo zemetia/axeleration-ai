@@ -19,23 +19,17 @@
 Every public page must export `generateMetadata`. Use `buildMetadata()` — never hand-write `Metadata` objects.
 
 ```ts
-// src/app/[locale]/about/page.tsx
+// src/app/about/page.tsx
 import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo';
 import { siteConfig } from '@/config/site';
 
-interface Props {
-  params: Promise<{ locale: string }>;
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale } = await params;
+export async function generateMetadata(): Promise<Metadata> {
   const page = siteConfig.pages['about'];
   return buildMetadata({
     title: page?.title,
     description: page?.description,
     path: '/about',
-    locale,
   });
 }
 ```
@@ -47,8 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 | `title` | `title` arg → `siteConfig.seo.titleTemplate` |
 | `description` | `description` arg → `siteConfig.description` |
 | `metadataBase` | `siteConfig.url` |
-| `alternates.canonical` | locale-prefixed canonical URL |
-| `alternates.languages` | hreflang for every `routing.locales` entry + `x-default` |
+| `alternates.canonical` | canonical URL |
 | `openGraph.*` | title, description, image, locale, type, siteName |
 | `twitter.*` | card `summary_large_image`, title, description, image, creator |
 | `robots` | `index:true, follow:true` (or noindex if `noIndex:true`) |
@@ -57,21 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 Auth pages, dashboards, and any non-public route:
 ```ts
-return buildMetadata({ title: 'Login', path: '/login', locale, noIndex: true });
-```
-
----
-
-## i18n + hreflang
-
-`buildMetadata()` automatically generates `alternates.languages` for every locale in `routing.locales`. No manual hreflang work needed.
-
-Output for `/about` with locales `['en', 'id']`:
-```html
-<link rel="canonical" href="https://example.com/about" />
-<link rel="alternate" hreflang="en" href="https://example.com/about" />
-<link rel="alternate" hreflang="id" href="https://example.com/id/about" />
-<link rel="alternate" hreflang="x-default" href="https://example.com/about" />
+return buildMetadata({ title: 'Login', path: '/login', noIndex: true });
 ```
 
 ---
@@ -80,7 +59,7 @@ Output for `/about` with locales `['en', 'id']`:
 
 `src/app/sitemap.ts` is auto-generated — **do not edit it directly**.
 
-Add/remove pages only via `siteConfig.pages`. The sitemap produces one URL per `page × locale`. Served at `/sitemap.xml`.
+Add/remove pages only via `siteConfig.pages`. The sitemap produces one URL per page. Served at `/sitemap.xml`.
 
 Priority guide:
 | Page type | `priority` |
@@ -113,7 +92,7 @@ rules: [
 1. Place the image at `public/og.png` (1200×630 px)
 2. Update `siteConfig.ogImage` if the path differs
 3. For per-page OG images, generate with Next.js `ImageResponse`:
-   - Create `src/app/[locale]/about/opengraph-image.tsx`
+   - Create `src/app/about/opengraph-image.tsx`
    - Return `<ImageResponse>` — see [Next.js docs on OG images](https://nextjs.org/docs/app/api-reference/file-conventions/opengraph-image)
 
 ---

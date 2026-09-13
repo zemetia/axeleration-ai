@@ -1,0 +1,82 @@
+/// Whether episodes of this project continue one another (shared continuity + character bible
+/// carried forward) or stand alone. Genre/look lives in `Project.tags`, not here.
+enum ProjectType {
+  EPISODIC
+  NON_CONTINUOUS
+}
+
+enum AspectRatio {
+  R9_16
+  R16_9
+  R1_1
+}
+
+enum Resolution {
+  P720
+  P1080
+  P4K
+}
+
+enum EpisodeStatus {
+  DRAFT
+  GENERATING
+  READY_FOR_REVIEW
+  DONE
+  FAILED
+}
+
+/// Pipeline order lives in `src/config/pipeline.ts` (STAGE_ORDER), not in this declaration —
+/// Postgres enum ordering is not what the graph, the rail or the forecast iterate over.
+enum StageKind {
+  RESEARCH
+  IDEA
+  SCRIPT
+  BREAKDOWN
+  SCENES
+  VOICE
+  MUSIC
+  RENDER
+}
+
+// How the RESEARCH stage sources context for the IDEA stage that follows it.
+enum ResearchMode {
+  HUMAN // user-pasted notes/links, no LLM call
+  AI_REASONING // LLM brainstorm from premise + continuity only, no web access
+  AI_CDP // agentic web research via local Chrome (see src/ai/research/research-agent.ts)
+  SKIP // stage completes immediately with empty output
+}
+
+enum StageStatus {
+  PENDING
+  GENERATING
+  READY
+  APPROVED
+  FAILED
+}
+
+enum AssetType {
+  CHARACTER
+  PERSON
+  STYLE
+  LOCATION
+  MAP
+  PROP
+  AMBIENCE
+  VOICE
+}
+
+enum AssetStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum Capability {
+  TEXT_TO_IMAGE
+  IMAGE_TO_IMAGE
+  TEXT_TO_VIDEO
+  IMAGE_TO_VIDEO
+  TTS
+  MUSIC
+  VIDEO_ASSEMBLY
+  LLM_TEXT
+}

@@ -1,0 +1,29 @@
+model Asset {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  type        AssetType
+  handle      String // e.g. "luna", "rainy-alley" (mentioned as @luna)
+  name        String
+  description String?     @db.Text // canonical text injected when the mention is rewritten
+  refUrl      String? // local storage path — reference image/audio sent to the provider
+  voiceId     String? // for AssetType.VOICE (e.g. ElevenLabs voice id)
+  metadata    Json?
+  // asset lab record: base prompt + every generated view (see src/assets/lab/lab-record.ts).
+  // Separate from `metadata` because that column is normalized against the type's field schema on
+  // every write, which would strip anything not declared there.
+  lab         Json?
+  status      AssetStatus @default(ACTIVE)
+
+  // provenance (nullable: user-uploaded assets have no producing stage)
+  producedByStageId String?
+  producedByStage   EpisodeStage? @relation("StageProducedAssets", fields: [producedByStageId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([projectId, handle])
+  @@index([projectId, type])
+  @@map("assets")
+}

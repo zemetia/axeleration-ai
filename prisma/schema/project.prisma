@@ -1,0 +1,52 @@
+model Project {
+  id      String @id @default(cuid())
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  name    String
+  type    ProjectType
+  premise String      @db.Text
+
+  /// Free-form genre/look labels the user types themselves ("cartoon", "anime", "realistic", …).
+  /// Fed to the character bible and idea prompts as style hints.
+  tags String[] @default([])
+
+  /// One-line hook shown on cards and lists — the premise condensed.
+  logline        String?
+  targetAudience String?
+  tone           String?
+  visualStyle    String? @db.Text
+  /// Language the narration and dialogue are written in.
+  language       String  @default("English")
+
+  // Video config (per project — see docs/plan/VIDEO_PLATFORM_MVP.md)
+  aspectRatio        AspectRatio @default(R9_16)
+  resolution         Resolution  @default(P1080)
+  targetTotalSeconds Int         @default(60)
+  sceneDurationMin   Int         @default(4)
+  sceneDurationMax   Int         @default(8)
+
+  // Style / model overrides
+  styleConfig Json?
+  modelConfig Json?
+
+  /// Per-project pipeline behaviour that is not a model choice — currently `{ skipAudio }`, which
+  /// makes the VOICE and MUSIC stages complete instantly at zero cost so iterating on the video
+  /// does not keep paying for a soundtrack nobody is listening to yet. Read through
+  /// `src/config/pipeline-config.ts`, never inline.
+  pipelineConfig Json?
+
+  /// Default RESEARCH stage mode for new episodes of this project (overridable per-episode).
+  defaultResearchMode ResearchMode @default(AI_CDP)
+
+  characterBible CharacterBible?
+  continuity     ContinuityState?
+  episodes       Episode[]
+  assets         Asset[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ownerId])
+  @@map("projects")
+}

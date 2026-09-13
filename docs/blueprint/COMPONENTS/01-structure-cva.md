@@ -8,10 +8,10 @@
 
 | Layer | Path | Constraints |
 |---|---|---|
-| `ui/` | [src/components/ui/](../../../src/components/ui/) | No domain logic, no i18n, no stores |
-| `shared/` | [src/components/shared/](../../../src/components/shared/) | May use i18n hooks, no domain data-fetch |
+| `ui/` | [src/components/ui/](../../../src/components/ui/) | No domain logic, no stores |
+| `shared/` | [src/components/shared/](../../../src/components/shared/) | Cross-feature reusable, no domain data-fetch |
 | `layout/` | [src/components/layout/](../../../src/components/layout/) | Page scaffolding — Header, Footer, PageWrapper |
-| feature | `src/app/[locale]/<feature>/` | Co-located with page, domain-specific |
+| feature | `src/app/<feature>/` | Co-located with page, domain-specific |
 
 ---
 
@@ -38,19 +38,21 @@ export type { ComponentNameProps } from './ComponentName';
 
 ```ts
 // ✅ from barrel
-import { Button } from '@/components/ui/Button';
+import { TextInputField } from '@/components/ui/TextInputField';
 
 // ❌ direct file import
-import { Button } from '@/components/ui/Button/Button';
+import { TextInputField } from '@/components/ui/TextInputField/TextInputField';
 ```
 
-**shadcn exception:** Generated files land as flat `src/components/ui/<name>.tsx`, imported as `@/components/ui/<name>`.
+There is no external component package: every primitive lives in `src/components/ui/<Name>/` and is imported from its barrel (see [02 — UI components](./02-ui-components.md) for the inventory). Radix packages supply behaviour only — a `Dialog`/`Select`/`Collapsible` wraps `@radix-ui/react-*` but is still our file, with our tokens and our four-file layout.
 
 ---
 
 ## CVA Pattern (multi-variant components)
 
-All components with variants use CVA from `class-variance-authority`.
+> CVA is for a component with a real variant matrix (`Button`, `Badge`). A primitive with one look — `Input`, `Textarea`, `Separator`, `Progress` — is a plain styled element; wrapping it in `cva()` with a single empty variant set buys nothing.
+
+All CVA-based components use `class-variance-authority`.
 
 ```ts
 // src/components/ui/Button/Button.tsx

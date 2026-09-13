@@ -12,6 +12,10 @@
 /build
 /storybook-static
 
+# Local object storage (generated assets/renders — see docs/plan/tasks/T01-dependencies-and-env.md)
+/storage/*
+!/storage/.gitkeep
+
 # Env files
 .env
 .env*.local
@@ -24,6 +28,12 @@ yarn-error.log*
 
 # Testing
 /coverage
+
+# Local agent tooling
+.claude/
+
+# Debug logs
+debug-storybook.log
 
 # TypeScript
 *.tsbuildinfo

@@ -58,7 +58,7 @@ Config: [eslint.config.mjs](../../../eslint.config.mjs) — `npm run lint` → `
 | `@typescript-eslint/no-unused-vars` | No dead variables |
 | `react-hooks/rules-of-hooks` | Hooks at component top level only |
 | `react-hooks/set-state-in-effect` | No `setState` inside `useEffect` |
-| `@next/next/no-html-link-for-pages` | Use `<Link>` from `@/i18n/navigation` |
+| `@next/next/no-html-link-for-pages` | Use `<Link>` from `next/link` |
 
 Unused-but-required params: prefix with `_`:
 ```ts
@@ -93,7 +93,7 @@ import { cn } from '../../lib/cn';
 
 | Item | Convention | Example |
 |---|---|---|
-| React components | PascalCase | `UserProfile`, `LanguageSwitcher` |
+| React components | PascalCase | `UserProfile`, `ProjectCard` |
 | Hooks | `use` prefix + camelCase | `useToast`, `useBreakpoint` |
 | Zustand stores | `use` prefix + `Store` suffix | `useAppStore`, `useCartStore` |
 | Services | camelCase + `Service` suffix | `healthService`, `userService` |

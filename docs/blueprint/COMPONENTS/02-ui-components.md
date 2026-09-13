@@ -1,78 +1,78 @@
 # Components — 02: Existing UI Components
 
-← [01 — Layers, CVA](./01-structure-cva.md) | [COMPONENTS.md](../COMPONENTS.md) | [03 — Storybook, tests, shadcn →](./03-storybook-tests-shadcn.md)
+← [01 — Layers, CVA](./01-structure-cva.md) | [COMPONENTS.md](../COMPONENTS.md) | [03 — Storybook, tests, accessibility →](./03-storybook-tests-shadcn.md)
 
 ---
 
-## Simple Components (no CVA)
+## One component library: `src/components/ui/` (2026-08-01)
 
-For structural components with no variants:
+`@heroui/react` is **uninstalled**. Every screen — public pages, auth, and the whole studio — renders hand-rolled shadcn-style primitives: CVA variants or plain styled elements over Radix, reading the `--color-*` tokens directly. If you see `@heroui/react` in an example anywhere, that example is stale.
 
-```ts
-// src/components/ui/Card/Card.tsx
-import type { HTMLAttributes } from 'react';
-import { cn } from '@/lib/cn';
+| Primitive | Built on | Notes |
+|---|---|---|
+| `Button` / `buttonVariants` | CVA + `@radix-ui/react-slot` | `variant`: `primary` \| `secondary` \| `outline` \| `ghost` \| `destructive` \| `destructive-outline` \| `link`. `size`: `xs` \| `sm` \| `md` \| `lg` \| `icon` \| `icon-sm`. `isLoading` prepends a spinner (skipped under `asChild`, which takes one child) |
+| `Badge` / `badgeVariants` | CVA | `default` \| `secondary` \| `soft` \| `outline` \| `success` \| `warning` \| `destructive` |
+| `Card` (+ `CardHeader`/`CardTitle`/`CardDescription`/`CardContent`/`CardFooter`) | — | `isInteractive` lifts + outlines on hover, for a card that is one big link |
+| `Input` / `Textarea` / `Label` | `@radix-ui/react-label` | Event-based DOM semantics |
+| `Select` (+ `SelectTrigger`/`SelectContent`/`SelectItem`/…) | `@radix-ui/react-select` | For custom option rendering; `SelectField` covers enum pickers |
+| `Dialog` (+ `DialogContent`/`DialogTitle`/`DialogDescription`/`DialogFooter`/…) | `@radix-ui/react-alert-dialog` | Confirmation dialogs. Modal, no dismiss-on-outside-click |
+| `Collapsible` | `@radix-ui/react-collapsible` | Disclosure sections |
+| `Progress` | `@radix-ui/react-progress` | `value` 0–100, `indicatorClassName` to recolor the fill |
+| `Separator` | `@radix-ui/react-separator` | |
+| `Spinner` | `lucide-react` | |
+| `Skeleton` | — | |
+| `PageHeader` | — | Eyebrow / title / description / meta / actions. First block on every studio page |
+| `EmptyState` | — | Icon + title + description + one action. `isInset` for an empty slot inside a card |
+| `FieldShell` | — | The label/hint/error scaffold every field composes |
+| `Stepper` / `OptionCardGroup` / `TagsInput` | — | Wizard-specific |
+| `Typography` | — | Heading/paragraph scale, see below |
+| `Sonner` | `sonner` | `Toaster`, mounted once in `src/app/layout.tsx` |
 
-export function Card({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn('rounded-lg border border-border bg-card text-card-foreground p-6', className)}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-}
-Card.displayName = 'Card';
+```tsx
+import { Button, buttonVariants } from '@/components/ui/Button';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+
+<Button variant="primary" size="md" isLoading={isSaving}>Save</Button>
+<Badge variant="soft">Active</Badge>
+<Card isInteractive>
+  <CardHeader><CardTitle>Episode 3</CardTitle></CardHeader>
+  <CardContent>…</CardContent>
+</Card>
 ```
 
----
+`Button`-as-link applies `buttonVariants` to a `Link` — the component has no polymorphic `as`:
 
-## Button — [src/components/ui/Button/](../../../src/components/ui/Button/)
+```tsx
+<Link href="/projects/new" className={buttonVariants({ variant: 'primary', size: 'md' })}>
+  New project
+</Link>
+```
 
-| Prop | Type | Values |
-|---|---|---|
-| `variant` | CVA | `primary` \| `secondary` \| `outline` \| `ghost` \| `destructive` \| `link` |
-| `size` | CVA | `xs` \| `sm` \| `md` \| `lg` \| `xl` \| `icon` \| `icon-sm` \| `icon-lg` |
-| `isLoading` | boolean | disables + shows spinner |
-| `leftIcon` | ReactNode | icon slot before label |
-| `rightIcon` | ReactNode | icon slot after label |
-| `fullWidth` | boolean | `w-full` |
+**Everything is event-based DOM semantics** — `onClick`, `disabled`, `required` — with one deliberate exception below. Porting old code: `onPress` → `onClick`, `isDisabled` → `disabled`, `variant="danger"` → `variant="destructive"`, `<Chip>` → `<Badge>` or `<StatusChip>`.
 
 ---
 
-## Input — [src/components/ui/Input/](../../../src/components/ui/Input/)
+## The one value-based exception: the field wrappers
 
-| Prop | Type | Notes |
-|---|---|---|
-| `size` | CVA | `sm` \| `md` \| `lg` |
-| `inputState` | CVA | `default` \| `error` \| `success` |
-| `label` | string | renders `<label>` with htmlFor wired |
-| `hint` | string | helper text below |
-| `error` | string | error text; sets `aria-invalid`, `aria-describedby` |
-| `leftAddon` | ReactNode | prepended content |
-| `rightAddon` | ReactNode | appended content |
-| `required` | boolean | `aria-required` + visual indicator |
+`TextInputField`, `TextAreaField`, `NumberInputField` and `SelectField` compose `FieldShell` + a control, and **keep a value-based `onChange(value)`** inherited from the HeroUI originals they replaced:
 
----
+```tsx
+// ✅ the wrappers hand you the value
+<TextInputField label="Title" value={title} onChange={setTitle} />
+<NumberInputField label="Seconds" value={seconds} onChange={setSeconds} minValue={1} />
 
-## Badge — [src/components/ui/Badge/](../../../src/components/ui/Badge/)
+// ✅ the raw primitives are ordinary DOM
+<Input value={title} onChange={(e) => setTitle(e.target.value)} />
+```
 
-| Prop | Type | Values |
-|---|---|---|
-| `variant` | CVA | `default` \| `secondary` \| `outline` \| `destructive` \| `success` \| `warning` |
-| `size` | CVA | `sm` \| `md` \| `lg` |
-| `dot` | boolean | prepends colored dot indicator |
+Every call site in the app passes a state setter straight in, so the signature was kept rather than rewritten at ~40 call sites. They also still accept `isRequired` / `isDisabled` / `isInvalid` alongside `label` / `hint` / `error` / `fullWidth`.
 
----
+`FieldShell` owns the label row (with an optional right-aligned `labelAction`), the required marker, `aria-describedby` wiring, and the rule that **an error replaces the hint** rather than stacking under it. Compose it for a new field type; do not re-implement the trio.
 
-## Card — [src/components/ui/Card/](../../../src/components/ui/Card/)
+**They are controlled only when `value` is passed.** Spreading `value={value ?? ''}` unconditionally pins an uncontrolled field to the empty string and drops every keystroke but the last — see LEARN.md 2026-08-01.
 
-Sub-components: `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`
-
-| Prop | Type | Notes |
-|---|---|---|
-| `noPadding` | boolean | on `Card` — removes default `p-6` |
+`SelectField` is a native `<select>` in the same shell. Reach for the Radix `Select` only when you need search, multi-select, or rich item rendering.
 
 ---
 
@@ -92,16 +92,8 @@ Sub-components: `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardConte
 
 Prop `as?: ElementType` overrides the rendered element.
 
----
-
-## Sonner — [src/components/ui/Sonner/](../../../src/components/ui/Sonner/)
-
-| Export | Notes |
-|---|---|
-| `Toaster` | Pre-configured Sonner. Mount ONCE in `src/app/[locale]/layout.tsx` |
-
-Config: `theme="dark"`, `richColors`, `position="bottom-right"`, classNames use design-system tokens with `!` Tailwind v4 important suffix.
+Studio pages generally use `PageHeader` rather than a bare `Typography variant="h2"` — it puts the eyebrow, title, description, status meta and actions in the same place on every screen.
 
 ---
 
-← [01 — Layers, CVA](./01-structure-cva.md) | [COMPONENTS.md](../COMPONENTS.md) | → [03 — Storybook, tests, shadcn](./03-storybook-tests-shadcn.md)
+← [01 — Layers, CVA](./01-structure-cva.md) | [COMPONENTS.md](../COMPONENTS.md) | → [03 — Storybook, tests, accessibility](./03-storybook-tests-shadcn.md)

@@ -43,7 +43,6 @@ Same blueprint, same knowledge system — different tool, same results.
 | Framework | Next.js App Router | 16 |
 | Language | TypeScript strict | 6 |
 | Styling | Tailwind CSS + design tokens | v4 |
-| i18n | next-intl | v4 |
 | Server state | TanStack Query | v5 |
 | Global state | Zustand | v5 |
 | Validation | Zod | v4 |
@@ -60,9 +59,8 @@ Same blueprint, same knowledge system — different tool, same results.
 ## What's Included
 
 **Request & infrastructure**
-- **Rate limiting** — sliding-window 60 req/min per IP on all `/api/*` routes, built into `proxy.ts` via `next-limitr`.
+- **Rate limiting** — sliding-window 60 req/min per IP on all `/api/*` routes, built into `src/middleware.ts` via `next-limitr`.
 - **Security headers** — `HSTS`, `X-Frame-Options`, `CSP`, `Permissions-Policy` applied on every response.
-- **Locale routing** — locale detection, cookie setting, and redirects handled in the proxy layer before any route renders.
 - **Health check endpoint** — `/api/health` on Edge runtime, ready for uptime monitoring.
 
 **Data & state**
@@ -80,9 +78,6 @@ Same blueprint, same knowledge system — different tool, same results.
 - **Four-file component rule** — every UI component ships with: implementation, Storybook story, Vitest test, and barrel export.
 - **Sonner v2** — toast notifications, single `<Toaster />` mount in the root layout.
 - **Lucide React v1** — icon set paired with shadcn/ui.
-
-**Internationalization**
-- **next-intl v4** — EN + ID locales out of the box. `localePrefix: 'as-needed'` keeps `/about` clean in the default locale. All navigation via `@/i18n/navigation` — `next/navigation` is banned.
 
 **Observability**
 - **Sentry v10** — error monitoring. `displayName` required on every component for readable traces. No-op without `NEXT_PUBLIC_SENTRY_DSN`.
@@ -160,25 +155,20 @@ npm run build-storybook
 
 ```
 src/
-├── app/[locale]/         # Pages — Server Components by default
+├── app/                  # Pages — Server Components by default
 ├── components/
 │   ├── ui/               # Primitives (Button, Input, Badge, Card…)
 │   ├── layout/           # Header, Footer, PageWrapper
 │   └── shared/           # Cross-feature components
 ├── hooks/                # Client-side hooks
-├── i18n/                 # next-intl config + routing
 ├── lib/                  # cn, utils, Sentry, cookies
 ├── providers/            # PostHog provider
 ├── proxy/                # rate-limit, security-headers modules
 ├── services/             # ApiClient + domain services
 ├── stores/               # Zustand stores
-└── types/                # Shared TypeScript types
+├── types/                # Shared TypeScript types
+└── middleware.ts         # Request intercept entry
 
-messages/
-├── en/                   # English translations
-└── id/                   # Indonesian translations
-
-proxy.ts                  # Request intercept entry (Next.js 16)
 docs/blueprint/           # AI reference system
 docs/knowledge/           # Living memory — style & correction log
 ```

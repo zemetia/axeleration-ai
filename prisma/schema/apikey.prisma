@@ -1,0 +1,19 @@
+model ApiKey {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  provider   String // "fal" | "replicate" | "elevenlabs" | "anthropic" | "openai" | ...
+  label      String?
+  ciphertext String  @db.Text // AES-256-GCM output (iv:tag:data)
+  lastFour   String? // for display only
+  isActive   Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Multiple keys per provider are allowed — projects choose which one to use per capability
+  // via `Project.modelConfig[capability].apiKeyId` (see `src/providers/types.ts`).
+  @@index([userId, provider])
+  @@map("api_keys")
+}

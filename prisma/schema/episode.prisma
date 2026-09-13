@@ -1,0 +1,88 @@
+model Episode {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  number        Int
+  title         String?
+  status        EpisodeStatus @default(DRAFT)
+  graphThreadId String? // LangGraph checkpoint thread id (== episodeId is fine)
+  /// Which graph shape this episode's checkpoint was written against — see `GRAPH_VERSION` in
+  /// `src/config/pipeline.ts`. A resume against a different shape is refused rather than run.
+  graphVersion  Int           @default(1)
+  finalVideoUrl String? // local storage path of RENDER output
+  totalCost     Decimal?      @db.Decimal(10, 4)
+
+  // RESEARCH stage input — defaults from Project.defaultResearchMode, overridable at creation time.
+  researchMode  ResearchMode @default(AI_CDP)
+  researchNotes String?      @db.Text // user-pasted context, only read when researchMode == HUMAN
+
+  /// Auto-pilot: approve every remaining stage without asking, up to `autoPilotBudget` USD.
+  /// A run is active when `autoPilotStartedAt` is set and `autoPilotStoppedAt` is not — deliberately
+  /// derived from the timestamps rather than a separate boolean, which could disagree with them.
+  autoPilotBudget     Decimal?  @db.Decimal(10, 4)
+  autoPilotStartedAt  DateTime?
+  autoPilotStoppedAt  DateTime?
+  autoPilotStopReason String? // why it stopped: finished, over budget, a failed stage, or cancelled
+
+  stages EpisodeStage[]
+  scenes Scene[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([projectId, number])
+  @@index([projectId])
+  @@map("episodes")
+}
+
+model EpisodeStage {
+  id        String  @id @default(cuid())
+  episodeId String
+  episode   Episode @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+
+  kind            StageKind
+  status          StageStatus @default(PENDING)
+  attempt         Int         @default(0) // bumped on Regenerate — for cost/debug
+  output          Json? // stage result: idea text, script JSON, scene refs, audio urls, etc.
+  error           String?
+  costEstimate    Decimal?    @db.Decimal(10, 4)
+  providerMeta    Json? // which provider/model ran, latency, tokens
+
+  assets Asset[] @relation("StageProducedAssets")
+
+  startedAt  DateTime?
+  finishedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@unique([episodeId, kind])
+  @@index([episodeId])
+  @@map("episode_stages")
+}
+
+/// One row per scene in the SCENES stage — gives each scene its own status/attempt/cost so a
+/// user can regenerate a single scene without rerunning the batch (see T12).
+model Scene {
+  id        String  @id @default(cuid())
+  episodeId String
+  episode   Episode @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+
+  index        Int // matches SceneBreakdown.scenes[].index from the SCRIPT stage
+  status       StageStatus @default(PENDING)
+  attempt      Int         @default(0) // bumped on a targeted regenerate
+  prompt       String?     @db.Text // the composed, @mention-resolved prompt actually sent to the provider
+  videoUrl     String?
+  error        String?
+  costEstimate Decimal?    @db.Decimal(10, 4)
+  providerMeta Json?
+
+  startedAt  DateTime?
+  finishedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@unique([episodeId, index])
+  @@index([episodeId])
+  @@map("scenes")
+}

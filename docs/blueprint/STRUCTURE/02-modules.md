@@ -52,16 +52,6 @@ toast.error('msg');      // direct sonner fn — outside components
 
 ---
 
-## src/i18n/
-
-| Path | Purpose |
-|---|---|
-| [src/i18n/routing.ts](../../../src/i18n/routing.ts) | `defineRouting` — locales `['en','id']`, `localePrefix: 'as-needed'` |
-| [src/i18n/navigation.ts](../../../src/i18n/navigation.ts) | `Link`, `redirect`, `usePathname`, `useRouter`, `getPathname` |
-| [src/i18n/request.ts](../../../src/i18n/request.ts) | `getRequestConfig` — loads message JSON per locale per RSC render |
-
----
-
 ## src/config/
 
 | Path | Export | Purpose |
@@ -144,21 +134,6 @@ Client-ready, display-optimized shapes. Produced by services after transforming 
 | [src/types/value-objects/index.ts](../../../src/types/value-objects/index.ts) | barrel |
 
 See [ARCHITECTURE/05-dto-vo.md](../ARCHITECTURE/05-dto-vo.md) for the full data-flow and transformation pattern.
-
----
-
-## messages/
-
-| Path | Namespace | Used by |
-|---|---|---|
-| [messages/en/common.json](../../../messages/en/common.json) | `common` | Shared labels, buttons, errors |
-| [messages/en/navigation.json](../../../messages/en/navigation.json) | `navigation` | Nav labels |
-| [messages/en/home.json](../../../messages/en/home.json) | `home` | Home page + meta |
-| [messages/id/common.json](../../../messages/id/common.json) | `common` | Indonesian |
-| [messages/id/navigation.json](../../../messages/id/navigation.json) | `navigation` | Indonesian |
-| [messages/id/home.json](../../../messages/id/home.json) | `home` | Indonesian |
-
-Namespace key = JSON filename without extension. Loaded in [src/i18n/request.ts](../../../src/i18n/request.ts).
 
 ---
 

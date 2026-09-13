@@ -100,7 +100,7 @@ catch (err) {
 
 ## Interceptors (src/services/client.ts)
 
-Register on the singleton. Best location: `src/services/interceptors.ts`, imported once in `src/app/[locale]/layout.tsx`.
+Register on the singleton. Best location: `src/services/interceptors.ts`, imported once in `src/app/layout.tsx`.
 
 ```ts
 // src/services/interceptors.ts
@@ -125,7 +125,7 @@ apiClient.interceptors.error.use((err) => {
 ```
 
 ```ts
-// src/app/[locale]/layout.tsx — side-effect import, registers once
+// src/app/layout.tsx — side-effect import, registers once
 import '@/services/interceptors';
 ```
 
